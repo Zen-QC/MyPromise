@@ -1,23 +1,23 @@
-enum States {
+export enum States {
     PENDING = "pending",
     FULFILLED = "fulfilled",
     REJECTED = "rejected",
 }
 
-interface Resolve<T> {
+export interface Resolve<T> {
     (value: T | PromiseLike<T>): void;
 }
 
-interface Reject {
+export interface Reject {
     (reason?: any): void;
 }
 
-interface Executor<T> {
+export interface Executor<T> {
     (resolve: Resolve<T>, reject: Reject): void;
 }
 
 //  PromisesA+ 1.1
-interface PromiseLike<T> {
+export interface PromiseLike<T> {
     then<TResult1 = T, TResult2 = never>(
         //  PromisesA+ 2.2.1
         onFulfilled?: ((value: T | PromiseLike<T>) => TResult1 | PromiseLike<TResult1>) | undefined | null,
@@ -42,7 +42,7 @@ export class MyPromise<T> {
     }
 
     //  PromisesA+ 1.3 | PromisesA+ 2.1
-    resolve: Resolve<T> = (value: T | PromiseLike<T>) => {
+    private resolve: Resolve<T> = (value: T | PromiseLike<T>) => {
         try {
             //  PromisesA+ 2.2.4 异步调用，用setTimeout模拟创建微任务
             setTimeout(() => {
@@ -60,7 +60,7 @@ export class MyPromise<T> {
     };
 
     // PromisesA+ 1.5
-    reject: Reject = (reason: any) => {
+    private reject: Reject = (reason: any) => {
         try {
             //  PromisesA+ 2.2.4 异步调用，用setTimeout模拟创建微任务
             setTimeout(() => {
@@ -204,4 +204,4 @@ MyPromise.deferred = function () {
 };
 
 // @ts-ignore
-export = MyPromise;
+// export = MyPromise;
