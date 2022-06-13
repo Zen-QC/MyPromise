@@ -8,11 +8,8 @@ export function resolve<T>(value: T | PromiseLike<T>): MyPromise<T> {
         "then" in value &&
         typeof value.then === "function"
     ) {
-        /**
-         * 如果 value 是一个 thenable，将它转换成 MyPromise 对象；
-         * 如果 value 是一个嵌套的 thenable，那么它会被展平。
-         **/
-        value.then((val: T | PromiseLike<T>) => resolve(val));
+        // 如果 value 是一个 thenable，将它转换成 MyPromise 对象；
+        return new MyPromise<T>((_resolve, _reject) => value.then(_resolve, _reject));
     }
     //	如果 value 不是上述两种情况，返回一个用 value 解决的 Promise。
     return new MyPromise<T>((_resolve: Resolve<T>) => {
